@@ -1,8 +1,11 @@
+float stats[] = new float[10];
+
 class Body {
   float mass;
   PVector pos;
   PVector spd;
   PVector acc;
+  float periapse, apoapse;
   ArrayList<PVector> trace;
    
   Body(float mass, PVector pos, PVector spd){  
@@ -19,9 +22,9 @@ class Body {
   
   void show(){
     fill(255);
-    float diam = 3.0 * pow(mass, 1/3) / 2.0;
     noStroke();
-    ellipse(this.pos.x, this.pos.y, diam, diam);
+    float r = radius() * bodyScale;
+    ellipse(this.pos.x, this.pos.y, 2*r, 2*r);
     this.showSpeed();
     
   }
@@ -46,6 +49,10 @@ class Body {
   void update(){
     this.spd.add(this.acc);
     this.pos.add(this.spd);
+    float mag = this.acc.mag();
+    //if (this.mag > maxAccM){
+    //  maxAccMag = this.
+    
     this.acc.mult(0);
   }
   

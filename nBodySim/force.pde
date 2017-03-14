@@ -7,13 +7,12 @@ PVector gravitation(Body a, Body b) {
   return ab.mult(-G * a.mass * b.mass / (d*d));
 }
 
-PVector escapeVelocity(Body big, PVector m){
+float escapeVelocity(Body_interface big, PVector m){
   
-  // where M is the position a big body and m that of a small one, relatively
+  // where m is the position of a small body 'orbiting' a big one
   
   // from https://en.wikipedia.org/wiki/Orbital_speed#Tangential_velocities_at_altitude
   // v0 = sqrt (2*GM / r)
-  PVector Mm = PVector.sub(m, big.pos);
-  PVector z = new PVector(0, 0, 1);
-  return Mm.cross(z).mult(sqrt(2 * G * big.mass / Mm.mag())) ;
+  PVector Mm = PVector.sub(m, big.pos());
+  return sqrt(2 * G * big.mass() / Mm.mag() ) ;
 }

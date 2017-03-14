@@ -1,23 +1,34 @@
-float stats[] = new float[10];
-
-class Body {
+class Body extends AbstractBody {
   float mass;
   PVector pos;
   PVector spd;
   PVector acc;
-  float periapse, apoapse;
-  ArrayList<PVector> trace;
+  PVector periapse, apoapse;
+  Body_interface parent;
+  float radius;
+  //ArrayList<PVector> trace;
    
-  Body(float mass, PVector pos, PVector spd){  
+  Body(float mass, PVector pos, PVector spd, Body_interface parent){  
+    this.parent = parent;     // body by which it is gravitationaly influenced.
     this.mass = mass;
+    this.radius = this.radius();
     this.pos = pos;
     this.spd = spd;
     this.acc = new PVector(0.0, 0.0);
-    this.trace = new ArrayList<PVector>(traceLength);
+    this.periapse = new PVector();
+    this.apoapse = new PVector();
   }
+  
+  float mass() {return this.mass;}
+  
+  PVector pos() {return this.pos;}
   
   float radius(){
    return 3.0 * pow(mass, 1/3) / 4.0; 
+  }
+  
+  PVector QV() {
+     return new PVector(this.spd.x, this.spd.y).mult(this.mass); 
   }
   
   void show(){
@@ -31,7 +42,11 @@ class Body {
   
   void showSpeed(){
     if (show_speed) {
-      stroke(0, 0 ,255);
+      if (escapeVelocity(this.parent, pos) < spd.mag() ){
+        stroke(255, 0, 0);
+      } else {
+        stroke(0, 0 ,255);
+      }
       line(this.pos.x, this.pos.y, this.pos.x + this.spd.x * spd_scale, this.pos.y + this.spd.y * spd_scale);
     }
   }
@@ -49,10 +64,8 @@ class Body {
   void update(){
     this.spd.add(this.acc);
     this.pos.add(this.spd);
-    float mag = this.acc.mag();
-    //if (this.mag > maxAccM){
-    //  maxAccMag = this.
-    
+
+    // clear acceleration until next step
     this.acc.mult(0);
   }
   
